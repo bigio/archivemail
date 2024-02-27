@@ -36,10 +36,10 @@ def check_python_version():
     try: 
         version = sys.version_info  # we might not even have this function! :)
         if (version[0] < 2) or (version[0] == 2 and version[1] < 4):
-            print too_old_error
+            print(too_old_error)
             sys.exit(1)
     except AttributeError:
-        print too_old_error
+        print(too_old_error)
         sys.exit(1)
 
 # define & run this early because 'unittest' requires Python >= 2.1
@@ -56,19 +56,19 @@ import tempfile
 import time
 import unittest
 import gzip
-import cStringIO
-import rfc822
+from io import StringIO
+import email
 import mailbox
 
 from types import ModuleType
 archivemail = ModuleType("archivemail")
 try:
-    module_fp = open("archivemail", "r")
+    module_fp = open("archivemail", "r").read()
 except IOError:
-    print "The archivemail script should be in the current directory in order"
-    print "to be imported and tested. Sorry."
+    print("The archivemail script should be in the current directory in order")
+    print("to be imported and tested. Sorry.")
     sys.exit(1)
-exec module_fp in archivemail.__dict__
+exec(module_fp) in archivemail.__dict__
 
 # We want to iterate over messages in a compressed archive mbox and verify
 # them.  This involves seeking in the mbox.  The gzip.Gzipfile.seek() in
@@ -247,12 +247,12 @@ class TestMboxDotlock(TestCaseInTempdir):
         """A dotlock should silently be omitted upon EACCES."""
         archivemail.options.quiet = True
         mbox_dir = os.path.dirname(self.mbox_name)
-        os.chmod(mbox_dir, 0500)
+        os.chmod(mbox_dir, 0o0500)
         try:
             self.mbox._dotlock_lock()
             self.mbox._dotlock_unlock()
         finally:
-            os.chmod(mbox_dir, 0700)
+            os.chmod(mbox_dir, 0o0700)
             archivemail.options.quiet = False
 
 class TestMboxPosixLock(TestCaseInTempdir):

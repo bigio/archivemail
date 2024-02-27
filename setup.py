@@ -8,11 +8,11 @@ def check_python_version():
 Your version of python is: %s""" % sys.version
     try: 
         version = sys.version_info  # we might not even have this function! :)
-        if (version[0] < 2):
-            print too_old_error
+        if (version[0] < 3):
+            print(too_old_error)
             sys.exit(1)
     except AttributeError:
-        print too_old_error
+        print(too_old_error)
         sys.exit(1)
 
 # define & run this early - 'distutils.core' requires Python >= 2.0
